@@ -1,94 +1,52 @@
 package com.example.model;
 
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 import lombok.Setter;
 
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
-import java.time.LocalDateTime;
+import javax.persistence.*;
+import java.util.HashSet;
+import java.util.Set;
 
 @Entity
+@Table(name = "user")
 @Getter
 @Setter
+@NoArgsConstructor
 public class User {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(name = "id")
     private Long id;
 
+    @Column(name = "login", unique = true, nullable = false)
+    private String login;
 
-    private String name;
+    @Column(name = "password", nullable = false)
+    private String password;
 
+    @Column(name = "email", nullable = false)
+    private String email;
 
-    private String theme;
+    @Column(name = "role", nullable = false)
+    private String role;
 
+    @Column(name = "first_name", nullable = false)
+    private String firstName;
 
-    private LocalDateTime startDate;
+    @Column(name = "last_name", nullable = false)
+    private String lastName;
 
+    @Column(name = "phone_number")
+    private String phoneNumber;
 
-    private LocalDateTime endDate;
+    @Column(name = "user_access", nullable = false)
+    private boolean userAccess;
 
+    @OneToMany(mappedBy = "id")
+    private Set<Course> courses;
 
-    private long durationInDays;
-
-
-    private int lecturer;
-
-    public Long getId() {
-        return id;
-    }
-
-    public void setId(Long id) {
-        this.id = id;
-    }
-
-    public String getName() {
-        return name;
-    }
-
-    public void setName(String name) {
-        this.name = name;
-    }
-
-    public String getTheme() {
-        return theme;
-    }
-
-    public void setTheme(String theme) {
-        this.theme = theme;
-    }
-
-    public LocalDateTime getStartDate() {
-        return startDate;
-    }
-
-    public void setStartDate(LocalDateTime startDate) {
-        this.startDate = startDate;
-    }
-
-    public LocalDateTime getEndDate() {
-        return endDate;
-    }
-
-    public void setEndDate(LocalDateTime endDate) {
-        this.endDate = endDate;
-    }
-
-    public long getDurationInDays() {
-        return durationInDays;
-    }
-
-    public void setDurationInDays(long durationInDays) {
-        this.durationInDays = durationInDays;
-    }
-
-    public int getLecturer() {
-        return lecturer;
-    }
-
-    public void setLecturer(int lecturer) {
-        this.lecturer = lecturer;
-    }
+    @OneToMany(mappedBy = "student")
+    private Set<CourseStudent> courseStudent = new HashSet<>();
 }
