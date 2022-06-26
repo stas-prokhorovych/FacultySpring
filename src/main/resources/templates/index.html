@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+      xmlns="http://www.w3.org/1999/xhtml">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+    <div th:replace="fragments/head :: head"></div>
+</head>
+<body class="main-page">
+<div th:replace="fragments/navbar :: navbar"></div>
+
+<div class="position-relative overflow-hidden p-3 p-md-5 m-md-3 text-center bg-light">
+    <div class="col-m d-5 p-lg-5 mx-auto my-5">
+        <h1 class="display-4 font-weight-normal">Courses</h1>
+        <p class="lead font-weight-normal">You can find plenty of courses on various topics. If you are student you can enroll and start learning journey</p>
+
+    </div>
+    <div class="product-device shadow-sm d-none d-md-block"></div>
+    <div class="product-device product-device-2 shadow-sm d-none d-md-block"></div>
+</div>
+
+<div class="position-relative overflow-hidden p-3 p-md-5 m-md-3 text-center bg-light">
+    <div class="col-md-5 p-lg-5 mx-auto my-5"></div>
+    <div class="col-md-5 p-lg-3 mx-auto my-5"></div>
+    <div class="product-device shadow-sm d-none d-md-block"></div>
+    <div class="product-device product-device-2 shadow-sm d-none d-md-block"></div>
+</div>
+
+<div th:replace="fragments/bootstrapScripts :: bootstrapScripts"></div>
+</body>
+</html>
