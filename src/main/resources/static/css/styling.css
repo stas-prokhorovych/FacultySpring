@@ -21,6 +21,12 @@
     padding: 1em;
 }
 
+.data-info {
+    color: #7e7e23;
+    border: 3px solid #737324;
+    padding: 1em;
+}
+
 .profile-background {
     background-color: #9b9b78;
 }

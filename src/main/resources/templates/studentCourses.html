@@ -4,8 +4,94 @@
 <head>
     <meta charset="UTF-8">
     <title>Title</title>
+    <div th:replace="fragments/head :: head"></div>
 </head>
 <body>
+<div th:replace="fragments/navbar :: navbar"></div>
 
+<h2 class="center">Registered courses</h2>
+<div class="row justify-content-center">
+    <div class="row col-md-8">
+        <table class="table table-bordered table-sm">
+            <thead class="thead-light">
+            <tr>
+                <th>Name</th>
+                <th>Theme</th>
+                <th>Start date</th>
+                <th>End date</th>
+            </tr>
+            </thead>
+            <tbody>
+                <tr th:each="course: ${registeredCourses}">
+                    <td th:text="${course.name}"/>
+                    <td th:text="${course.theme}"/>
+                    <td th:text="${#temporals.format(course.startDate, 'dd-MM-yyyy HH:mm')}"/>
+                    <td th:text="${#temporals.format(course.endDate, 'dd-MM-yyyy HH:mm')}"/>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+</div>
+
+<div class="center">
+    <h2>In progress</h2>
+</div>
+
+<div class="row justify-content-center">
+    <div class="row col-md-8">
+        <table class="table table-bordered table-sm">
+            <thead class="thead-light">
+            <tr>
+                <th>Name</th>
+                <th>Theme</th>
+                <th>Start date</th>
+                <th>End date</th>
+            </tr>
+            </thead>
+            <tbody>
+            <tr th:each="course: ${inProgressCourses}">
+                <td th:text="${course.name}"/>
+                <td th:text="${course.theme}"/>
+                <td th:text="${#temporals.format(course.startDate, 'dd-MM-yyyy HH:mm')}"/>
+                <td th:text="${#temporals.format(course.endDate, 'dd-MM-yyyy HH:mm')}"/>
+            </tr>
+            </tbody>
+        </table>
+    </div>
+</div>
+
+<h2 class="center">Finished courses</h2>
+<div class="row justify-content-center">
+    <div class="row col-md-8">
+        <table class="table table-bordered table-sm">
+            <thead class="thead-light">
+            <tr>
+                <th>Name</th>
+                <th>Theme</th>
+                <th>Start date</th>
+                <th>End date</th>
+                <th>Mark points</th>
+                <th>Mark code</th>
+                <th>Mark explanation</th>
+            </tr>
+            </thead>
+            <tbody>
+            <tr th:each="course: ${finishedCourses}">
+                <td th:text="${course.name}"/>
+                <td th:text="${course.theme}"/>
+                <td th:text="${#temporals.format(course.startDate, 'dd-MM-yyyy HH:mm')}"/>
+                <td th:text="${#temporals.format(course.endDate, 'dd-MM-yyyy HH:mm')}"/>
+                <span th:each="mark: ${journalInfo}">
+                    <td th:text="${mark.markPoints}"/>
+                    <td th:text="${mark.markCode}"/>
+                    <td th:text="${mark.markExplanation}"/>
+                </span>
+            </tr>
+            </tbody>
+        </table>
+    </div>
+</div>
+
+<div th:replace="fragments/bootstrapScripts :: bootstrapScripts"></div>
 </body>
 </html>

@@ -10,10 +10,13 @@
 <div th:replace="fragments/navbar :: navbar"></div>
 
 
-<h1>HERE</h1>
-
-
-
+    <tr th:each="course: ${courses}">
+        <td th:text="${course.name}"/>
+        <td th:text="${course.theme}"/>
+        <td th:text="${course.startDate}"/>
+        <td th:text="${course.endDate}"/>
+        <td th:text="${course.courseStatus}"/><br>
+    </tr>
 
 <div th:replace="fragments/bootstrapScripts :: bootstrapScripts"></div>
 </body>

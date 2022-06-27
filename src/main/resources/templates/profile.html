@@ -1,14 +1,27 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org"
-      xmlns="http://www.w3.org/1999/xhtml">
+      xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:sec="http://www.w3.org/1999/xhtml">
 <head>
 <head>
     <meta charset="UTF-8">
     <title>Title</title>
+    <div th:replace="fragments/head :: head"></div>
 </head>
-<body>
-    <form th:action="@{/logout}" method="post">
-        <input type="submit" value="Sign Out"/>
-    </form>
+<body class="profile-background">
+<div th:replace="fragments/navbar :: navbar"></div>
+
+<div class="center">
+    <h2>User information</h2>
+
+    <p>Name: <span th:text="${user .firstName}"/> </p>
+    <p>Surname: <span th:text="${user.lastName}"/> </p>
+    <p>You are: <span th:text="${user.role}"/> </p>
+    <p>Login: <span th:text="${user.login}"/></p>
+    <p>Email: <span th:text="${user.email}"/></p>
+    <p>Phone: <span th:text="${user.phoneNumber}"/></p>
+</div>
+
+<div th:replace="fragments/bootstrapScripts :: bootstrapScripts"></div>
 </body>
 </html>

@@ -4,8 +4,99 @@
 <head>
     <meta charset="UTF-8">
     <title>Title</title>
+    <div th:replace="fragments/head :: head"></div>
 </head>
 <body>
+<div th:replace="fragments/navbar :: navbar"></div>
 
+<h2 class="center">Open courses</h2>
+<div class="row justify-content-center">
+    <div class="row col-md-8">
+        <table class="table table-bordered table-sm">
+            <thead class="thead-light">
+            <tr>
+                <th>Name</th>
+                <th>Theme</th>
+                <th>Start date</th>
+                <th>End date</th>
+                <th>Teacher option</th>
+            </tr>
+            </thead>
+            <tbody>
+            <tr th:each="course: ${openForRegCourses}">
+                <td th:text="${course.name}"/>
+                <td th:text="${course.theme}"/>
+                <td th:text="${#temporals.format(course.startDate, 'dd-MM-yyyy HH:mm')}"/>
+                <td th:text="${#temporals.format(course.endDate, 'dd-MM-yyyy HH:mm')}"/>
+                <td>
+                    <form method="post" th:action="@{/teacher/start-course}">
+                        <input type="hidden" th:value="${course.id}" th:attr="name='courseId'"/>
+                        <input type="submit" name="enroll" value="Start course"/>
+                    </form>
+                </td>
+            </tr>
+            </tbody>
+        </table>
+    </div>
+</div>
+
+<h2 class="center">In progress</h2>
+<div class="row justify-content-center">
+    <div class="row col-md-8">
+        <table class="table table-bordered table-sm">
+            <thead class="thead-light">
+            <tr>
+                <th>Name</th>
+                <th>Theme</th>
+                <th>Start date</th>
+                <th>End date</th>
+                <th>Teacher option</th>
+            </tr>
+            </thead>
+            <tbody>
+            <tr th:each="course: ${inProgressCourses}">
+                <td th:text="${course.name}"/>
+                <td th:text="${course.theme}"/>
+                <td th:text="${#temporals.format(course.startDate, 'dd-MM-yyyy HH:mm')}"/>
+                <td th:text="${#temporals.format(course.endDate, 'dd-MM-yyyy HH:mm')}"/>
+                <td>
+                    <form method="post" th:action="@{/teacher/show-graduates}">
+                        <input type="hidden" th:value="${course.id}" th:attr="name='courseId'"/>
+                        <input type="submit" name="enroll" value="End course"/>
+                    </form>
+                </td>
+            </tr>
+            </tbody>
+        </table>
+    </div>
+</div>
+
+<h2 class="center">Finished courses</h2>
+<div class="row justify-content-center">
+    <div class="row col-md-8">
+        <table class="table table-bordered table-sm">
+            <thead class="thead-light">
+            <tr>
+                <th>Name</th>
+                <th>Theme</th>
+                <th>Start date</th>
+                <th>End date</th>
+            </tr>
+            </thead>
+            <tbody>
+            <tr th:each="course: ${finishedCourses}">
+                <td th:text="${course.name}"/>
+                <td th:text="${course.theme}"/>
+                <td th:text="${#temporals.format(course.startDate, 'dd-MM-yyyy HH:mm')}"/>
+                <td th:text="${#temporals.format(course.endDate, 'dd-MM-yyyy HH:mm')}"/>
+            </tr>
+            </tbody>
+        </table>
+    </div>
+</div>
+
+
+
+<div th:replace="fragments/bootstrapScripts :: bootstrapScripts"></div>
 </body>
 </html>

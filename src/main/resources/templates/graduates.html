@@ -4,8 +4,50 @@
 <head>
     <meta charset="UTF-8">
     <title>Title</title>
+    <div th:replace="fragments/head :: head"></div>
 </head>
 <body>
+<div th:replace="fragments/navbar :: navbar"></div>
 
+<h2 class="center">Congratulation with end of course<br>Please enter marks for your students</h2>
+
+<div class="row justify-content-center">
+    <form method="post" th:action="@{/teacher/end-course}">
+        <input type="hidden" th:value="${courseId}" th:attr="name='courseId'"/>
+
+        <div class="row col-md-6">
+            <table class="table table-bordered table-sm">
+                <thead class="thead-light">
+                <tr>
+                    <th>Login</th>
+                    <th>Email</th>
+                    <th>First name</th>
+                    <th>Last name</th>
+                    <th>Mark</th>
+                </tr>
+                </thead>
+                <tbody>
+                    <tr th:each="student: ${graduates}">
+                        <td th:text="${student.login}"/>
+                        <td th:text="${student.email}"/>
+                        <td th:text="${student.firstName}"/>
+                        <td th:text="${student.lastName}"/>
+                        <td>
+                            <input type="number" hidden name="studentId" th:value="${student.id}"/>
+                            <input type="number" name="mark" min="1" max="100" required/>
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+
+        <input type="submit" name="enroll" value="Finish"/>
+    </form>
+</div>
+
+
+
+
+<div th:replace="fragments/bootstrapScripts :: bootstrapScripts"></div>
 </body>
 </html>

@@ -1,6 +1,7 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org"
-      xmlns="http://www.w3.org/1999/xhtml">
+      xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:sec="https://www.thymeleaf.org/thymeleaf-extras-springsecurity3">
 <head>
     <meta charset="UTF-8">
     <title>Login</title>
@@ -9,7 +10,7 @@
 <body class="form-page">
 <div th:replace="fragments/navbar :: navbar"></div>
 
-<form id="form" th:action="@{login}" method="post">
+<form th:action="@{/login}" method="post">
     <section class="vh-100">
         <div class="container py-5 h-100">
             <div class="row d-flex justify-content-center align-items-center h-90">
@@ -19,10 +20,18 @@
 
                             <h3 class="mb-4">Login</h3>
 
-                            <div class="form-outline mb-4">
-                                <label class="form-label" for="login"><strong>Login</strong></label>
-                                <input type="text" id="login" name="login" class="form-control form-control-lg"/>
+                            <div class="data-error" th:if="${param.error}">
+                                Invalid username and password.
+                            </div>
 
+                            <div class="data-info" th:if="${param.logout}">
+                                You have been logged out.
+                            </div>
+
+                                <div class="form-outline mb-4">
+                                    <label class="form-label" for="username"><strong>Login</strong></label>
+                                    <input type="text" id="username" name="username" class="form-control form-control-lg"/>
+                                </div>
 
                                 <div class="form-outline mb-4">
                                     <label class="form-label" for="password"><strong>Password</strong></label>
@@ -37,9 +46,8 @@
                 </div>
             </div>
         </div>
-    </section>>
+    </section>
 </form>
-
 
 <div th:replace="fragments/bootstrapScripts :: bootstrapScripts"></div>
 </body>

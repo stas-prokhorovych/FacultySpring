@@ -1,22 +1,31 @@
 package com.example.config;
 
-import com.example.service.UserService;
+import com.example.service.UserDetailsServiceImpl;
 import lombok.AllArgsConstructor;
-import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.security.authentication.dao.DaoAuthenticationProvider;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
-import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+import org.springframework.security.crypto.password.PasswordEncoder;
 
+/**
+ * configures web security
+ */
 @Configuration
 @EnableWebSecurity
 @AllArgsConstructor
 public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
-    private final BCryptPasswordEncoder bCryptPasswordEncoder;
-    private final UserService userService;
+    private final UserDetailsServiceImpl userService;
+    private final PasswordEncoder encoder;
+
+
+    @Override
+    protected void configure(AuthenticationManagerBuilder auth) throws Exception {
+        auth.userDetailsService(userService)
+                .passwordEncoder(encoder);
+
+    }
 
     @Override
     protected void configure(HttpSecurity http) throws Exception {
@@ -27,25 +36,17 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
                     .antMatchers("/js/**").permitAll()
                     .antMatchers("/", "/signup", "/courseCatalogue").permitAll()
                     .anyRequest().authenticated()
-                .and()
-                    .formLogin()
+                    .and()
+                .formLogin()
                     .loginPage("/login")
+                    .defaultSuccessUrl("/profile")
+                    .failureUrl("/login?error=true")
                     .permitAll()
-                .and()
-                    .logout()
+                    .and()
+                .logout()
+                    .invalidateHttpSession(true)
+                    .clearAuthentication(true)
                     .permitAll();
     }
 
-    @Override
-    protected void configure(AuthenticationManagerBuilder auth) throws Exception {
-        auth.authenticationProvider(daoAuthenticationProvider());
-    }
-
-    @Bean
-    public DaoAuthenticationProvider daoAuthenticationProvider() {
-        DaoAuthenticationProvider provider = new DaoAuthenticationProvider();
-        provider.setPasswordEncoder(bCryptPasswordEncoder);
-        provider.setUserDetailsService(userService);
-        return provider;
-    }
 }

@@ -4,8 +4,93 @@
 <head>
     <meta charset="UTF-8">
     <title>Title</title>
+    <div th:replace="fragments/head :: head"></div>
 </head>
 <body>
+<div th:replace="fragments/navbar :: navbar"></div>
 
+
+<div class="center">
+    <h2 class="center">Students</h2>
+        <form method="get" action="controller">
+            <input type="hidden" name="command" value="PDF_REPORT">
+            <input class="btn btn-info" type="submit" name="delete" value="pdf"/>
+        </form>
+</div><br>
+
+<div class="row justify-content-center">
+    <div class="row col-md-6">
+        <table class="table table-bordered table-sm">
+            <thead class="thead-light">
+            <tr>
+                <th>Login</th>
+                <th>Email</th>
+                <th>First name</th>
+                <th>Last name</th>
+                <th>Admin option</th>
+            </tr>
+            </thead>
+            <tbody>
+                <tr th:each="student: ${students}">
+                    <td th:text="${student.login}"/>
+                    <td th:text="${student.email}"/>
+                    <td th:text="${student.firstName}"/>
+                    <td th:text="${student.lastName}"/>
+                    <span th:if="${student.userAccess == true}">
+                        <td>
+                            <form method="post" action="<c:url value='/controller'/>">
+                                <input type="hidden" name="command" value="BLOCK_USER">
+                                <input type="number" hidden name="id" value="${student.id}"/>
+                                <input class="btn btn-danger" type="submit" name="block" value="Block"/>
+                            </form>
+                        </td>
+                    </span>
+                    <span th:unless="student.userAccess != true">
+                        <td>
+                            <form method="post" action="<c:url value='/controller'/>">
+                                <input type="hidden" name="command" value="UNBLOCK_USER">
+                                <input type="number" hidden name="id" value="${student.id}"/>
+                                <input class="btn btn-success" type="submit" name="block" value="Unblock"/>
+                            </form>
+                        </td>
+                    </span>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+</div>
+
+<div class="center">
+    <h2 class="center">Teachers</h2>
+        <form method="get" action="controller">
+            <input type="hidden" name="command" value="PDF_REPORT">
+            <input class="btn btn-info" type="submit" name="delete" value="pdf"/>
+        </form>
+</div><br>
+
+<div class="row justify-content-center">
+    <div class="row col-md-6">
+        <table class="table table-bordered table-sm">
+            <thead class="thead-light">
+                <tr>
+                    <th>Login</th>
+                    <th>Email</th>
+                    <th>First name</th>
+                    <th>Last name</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr th:each="teacher: ${teachers}">
+                    <td th:text="${teacher.login}"/>
+                    <td th:text="${teacher.email}"/>
+                    <td th:text="${teacher.firstName}"/>
+                    <td th:text="${teacher.lastName}"/>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+</div>
+
+<div th:replace="fragments/bootstrapScripts :: bootstrapScripts"></div>
 </body>
 </html>
