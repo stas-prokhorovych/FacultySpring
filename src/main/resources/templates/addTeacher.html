@@ -2,12 +2,90 @@
 <html xmlns:th="http://www.thymeleaf.org"
       xmlns="http://www.w3.org/1999/xhtml">
 
-
 <head>
     <meta charset="UTF-8">
-    <title>Title</title>
+    <title th:text="#{add.teacher.title}"></title>
+    <div th:replace="fragments/head :: head"></div>
 </head>
-<body>
+<body class="form-page">
+<div th:replace="fragments/navbar :: navbar"></div>
 
+<form id="form-add-teacher" th:action="@{/admin/add-teacher}" method="post">
+    <section class="vh-100">
+        <div class="container py-5 h-10">
+            <div class="row d-flex justify-content-center align-items-center h-90">
+                <div class="col-12 col-md-8 col-lg-6 col-xl-5">
+                    <div class="card shadow-2-strong" style="border-radius: 1rem;">
+                        <div class="card-body p-5 text-center">
+
+                            <h3 class="mb-4" th:text="#{add.teacher.create}"/>
+
+                            <div class="form-outline mb-4">
+                                <label for="users" th:text="#{add.teacher.users}"></label>
+                                <select name="students" id="users">
+                                    <span th:each="student: ${students}">
+                                        <option th:value="${student.id}" th:text="${student.firstName + ' ' + student.lastName}"/>
+                                    </span>
+                                </select>
+                            </div>
+
+                            <div class="form-outline mb-4">
+                                <label for="choose-course" th:text="#{add.teacher.courses}"></label>
+                                <select name="courses" id="choose-course">
+                                    <span th:each="course: ${courses}">
+                                        <option th:value="${course.id}" th:text="${course.name}"/>
+                                    </span>
+                                </select>
+                            </div>
+
+                            <button class="btn btn-primary btn-lg btn-block" type="submit" th:text="#{add.teacher.finish}"></button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+</form>
+
+
+<form id="form" th:action="@{/admin/assign-teacher}" method="post">
+    <section class="vh-100">
+        <div class="container py-5 h-10">
+            <div class="row d-flex justify-content-center align-items-center h-90">
+                <div class="col-12 col-md-8 col-lg-6 col-xl-5">
+                    <div class="card shadow-2-strong" style="border-radius: 1rem;">
+                        <div class="card-body p-5 text-center">
+
+                            <h3 class="mb-4" th:text="#{add.teacher.assign}"/>
+
+                            <div class="form-outline mb-4">
+                                <label for="teachers" th:text="#{add.teacher.teachers}"></label>
+                                <select name="teachers" id="teachers">
+                                    <span th:each="teacher: ${teachers}">
+                                        <option th:value="${teacher.id}" th:text="${teacher.firstName + ' ' + teacher.lastName}"/>
+                                    </span>
+                                </select>
+                            </div>
+
+                            <div class="form-outline mb-4">
+                                <label for="courses" th:text="#{add.teacher.courses}"></label>
+                                <select name="courses" id="courses">
+                                    <span th:each="course: ${courses}">
+                                        <option th:value="${course.id}" th:text="${course.name}"/>
+                                    </span>
+                                </select>
+                            </div>
+
+                            <button class="btn btn-primary btn-lg btn-block" type="submit" th:text="#{add.teacher.finish}"></button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+</form>
+
+
+<div th:replace="fragments/bootstrapScripts :: bootstrapScripts"></div>
 </body>
 </html>

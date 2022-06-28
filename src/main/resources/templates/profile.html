@@ -5,21 +5,21 @@
 <head>
 <head>
     <meta charset="UTF-8">
-    <title>Title</title>
+    <title th:text="#{profile.title}"></title>
     <div th:replace="fragments/head :: head"></div>
 </head>
 <body class="profile-background">
 <div th:replace="fragments/navbar :: navbar"></div>
 
 <div class="center">
-    <h2>User information</h2>
+    <h2 th:text="#{profile.user.info}"/>
 
-    <p>Name: <span th:text="${user .firstName}"/> </p>
-    <p>Surname: <span th:text="${user.lastName}"/> </p>
-    <p>You are: <span th:text="${user.role}"/> </p>
-    <p>Login: <span th:text="${user.login}"/></p>
-    <p>Email: <span th:text="${user.email}"/></p>
-    <p>Phone: <span th:text="${user.phoneNumber}"/></p>
+    <strong><span th:text="#{profile.name}"/></strong> <span th:text="${user .firstName}"/><br>
+    <strong><span th:text="#{profile.surname}"/></strong> <span th:text="${user.lastName}"/><br>
+    <strong><span th:text="#{profile.you.are}"/></strong> <span th:text="${user.role}"/><br>
+    <strong><span th:text="#{profile.login}"/></strong> <span th:text="${user.login}"/><br>
+    <strong><span th:text="#{profile.email}"/></strong> <span th:text="${user.email}"/><br>
+    <strong><span th:text="#{profile.phone}"/></strong> <span th:text="${user.phoneNumber}"/><br>
 </div>
 
 <div th:replace="fragments/bootstrapScripts :: bootstrapScripts"></div>

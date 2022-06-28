@@ -17,4 +17,11 @@ public interface UserRepository extends JpaRepository<User, Long> {
 
     @Query(value = "SELECT * FROM user WHERE role = ?", nativeQuery = true)
     List<User> getAllUsersByRole(String role);
+
+    @Query(value = "SELECT * FROM user WHERE role=? AND id NOT IN(SELECT DISTINCT student_id FROM course_student)", nativeQuery = true)
+    List<User> findNewUser(String student);
+
+    List<User> findByRole(String role);
+
+//    void changeUserAccess(Long studentId);
 }

@@ -34,7 +34,10 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
                 .authorizeRequests()
                     .antMatchers("/css/**").permitAll()
                     .antMatchers("/js/**").permitAll()
-                    .antMatchers("/", "/signup", "/courseCatalogue").permitAll()
+                    .antMatchers("/", "/signup", "/course-catalogue/**", "/login").permitAll()
+                    .antMatchers("/student/**").hasAuthority("Student")
+                    .antMatchers("/teacher*").hasAuthority("Teacher")
+                    .antMatchers("/admin/**").hasAuthority("Admin")
                     .anyRequest().authenticated()
                     .and()
                 .formLogin()
@@ -47,6 +50,9 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
                     .invalidateHttpSession(true)
                     .clearAuthentication(true)
                     .permitAll();
+//                .and()
+//                .exceptionHandling()
+//                .accessDeniedPage("/403");
     }
 
 }

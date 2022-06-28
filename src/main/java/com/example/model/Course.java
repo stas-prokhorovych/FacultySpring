@@ -5,6 +5,7 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 import javax.persistence.*;
+import javax.validation.constraints.NotEmpty;
 import java.time.LocalDateTime;
 import java.util.HashSet;
 import java.util.Set;
@@ -20,9 +21,11 @@ public class Course {
     @Column(name = "id")
     private Long id;
 
+    @NotEmpty(message = "name can't be empty")
     @Column(name = "name", unique = true, nullable = false)
     private String name;
 
+    @NotEmpty(message = "theme can't be empty")
     @Column(name = "theme", nullable = false)
     private String theme;
 

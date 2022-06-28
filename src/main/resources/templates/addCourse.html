@@ -1,12 +1,72 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org"
       xmlns="http://www.w3.org/1999/xhtml">
-
 <head>
     <meta charset="UTF-8">
-    <title>Title</title>
+    <title th:text="#{add.course.title}"></title>
+    <div th:replace="fragments/head :: head"></div>
 </head>
-<body>
+<body class="form-page">
+<div th:replace="fragments/navbar :: navbar"></div>
 
+
+
+<form id="form-add" th:action="@{/admin/add-course}" th:object="${course}" method="POST">
+    <section class="vh-100">
+        <div class="container py-5 h-100">
+            <div class="row d-flex justify-content-center align-items-center h-90">
+                <div class="col-12 col-md-8 col-lg-6 col-xl-5">
+                    <div class="card shadow-2-strong" style="border-radius: 1rem;">
+                        <div class="card-body p-5 text-center">
+
+                            <h3 class="mb-4" th:text="#{add.course.create}"/>
+                            <div class="data-error" th:if="${dataError != null}" th:text="${dataError}">Data Error</div>
+
+                            <div class="form-outline mb-4">
+                                <label class="form-label" for="name"><strong th:text="#{add.course.name}"/></label>
+                                <input type="text" id="name" name="name"  th:field="*{name}" class="form-control form-control-lg"/>
+                                <div class="error" th:if="${#fields.hasErrors('name')}" th:errors="*{name}">Invalid name</div>
+                            </div>
+
+                            <div class="form-outline mb-4">
+                                <label class="form-label" for="theme"><strong th:text="#{add.course.theme}"/></label>
+                                <input type="text" id="theme" name="theme"  th:field="*{theme}" class="form-control form-control-lg"/>
+                                <div class="error" th:if="${#fields.hasErrors('theme')}" th:errors="*{theme}">Invalid name</div>
+                            </div>
+
+                            <div class="form-outline mb-4">
+                                <label class="form-label" for="start-date"><strong th:text="#{add.course.start.date}"/></label>
+                                <input type="datetime-local" id="start-date" name="startDate"  th:field="*{startDate}" class="form-control form-control-lg"/>
+                                <div class="error" th:if="${#fields.hasErrors('startDate')}" th:errors="*{startDate}">Invalid name</div>
+                            </div>
+
+                            <div class="form-outline mb-4">
+                                <label class="form-label" for="end-date"><strong th:text="#{add.course.end.date}"/></label>
+                                <input type="datetime-local" id="end-date" name="endDate"  th:field="*{endDate}" class="form-control form-control-lg"/>
+                                <div class="error" th:if="${#fields.hasErrors('endDate')}" th:errors="*{endDate}">Invalid name</div>
+                            </div>
+
+<!--                            <div class="form-outline mb-4">-->
+<!--                                <label for="id-lecturer"><strong th:text="#{add.course.teacher}"/></label>-->
+<!--                                <select name="id-lecturer" id="id" class="form-control form-control-lg">-->
+<!--                                    <option value=""><fmt:message key="add.course.select.info"/></option>-->
+<!--                                    <c:forEach items="${teacherForForm}" var="teacher">-->
+<!--                                        <option value="${teacher.id}">${teacher.firstName} ${teacher.lastName}</option>-->
+<!--                                    </c:forEach>-->
+<!--                                </select>-->
+<!--                            </div>-->
+
+                            <button class="btn btn-primary btn-lg btn-block" type="submit" th:text="#{add.course.add}"/>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+</form>
+
+
+
+<div th:replace="fragments/bootstrapScripts :: bootstrapScripts"></div>
 </body>
 </html>

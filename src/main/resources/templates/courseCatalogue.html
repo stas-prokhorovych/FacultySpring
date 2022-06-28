@@ -1,22 +1,163 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org"
+      xmlns:sec="http://www.w3.org/1999/xhtml"
       xmlns="http://www.w3.org/1999/xhtml">
 <head>
     <meta charset="UTF-8">
-    <title>Catalogue</title>
+    <title th:text="#{catalogue.title}"></title>
     <div th:replace="fragments/head :: head"></div>
 </head>
 <body>
 <div th:replace="fragments/navbar :: navbar"></div>
 
+<h3 class="center" th:text="#{catalogue.filter}"/>
+<div class="row justify-content-center">
+    <form th:action="@{/course-catalogue}">
+        <input type="hidden" name="command" value="COURSE_CATALOGUE">
 
-    <tr th:each="course: ${courses}">
-        <td th:text="${course.name}"/>
-        <td th:text="${course.theme}"/>
-        <td th:text="${course.startDate}"/>
-        <td th:text="${course.endDate}"/>
-        <td th:text="${course.courseStatus}"/><br>
-    </tr>
+        <div class="row col-md-13">
+            <table class="table table-bordered table-sm">
+                <thead class="thead-light">
+                <tr>
+                    <th th:text="#{catalogue.theme}"/>
+                    <th th:text="#{catalogue.teacher}"/>
+                    <th th:text="#{catalogue.sort}"/>
+                    <th th:text="#{catalogue.order}"/>
+                    <th th:text="#{catalogue.records}"/>
+                </tr>
+                </thead>
+                <tbody>
+                <tr>
+                    <td>
+                        <label for="theme"></label>
+                        <select name="theme" id="theme">
+                            <option value="" selected disabled hidden th:text="#{catalogue.all}"></option>
+                            <span th:each="theme: ${themesForForm}">
+                                <option th:value="${theme}" th:text="${theme}"/>
+                            </span>
+                        </select>
+                    </td>
+                    <td>
+                        <label for="teacher"></label>
+                        <select name="teacher" id="teacher">
+                            <option value="" selected disabled hidden th:text="#{catalogue.all}"></option>
+                            <span th:each="teacher: ${teacherForForm}">
+                                <option th:value="${teacher.id}"
+                                        th:text="${teacher.firstName + ' ' + teacher.lastName}"/>
+                            </span>
+                        </select>
+                    </td>
+                    <td>
+                        <input type="radio" id="name" name="sort" value="course.name">
+                        <label for="name" th:text="#{catalogue.sort.name}"/><br>
+                        <input type="radio" id="start_date" name="sort" value="DATEDIFF(end_date, start_date)">
+                        <label for="start_date" th:text="#{catalogue.sort.duration}"/><br>
+                        <input type="radio" id="student_enrolled" name="sort" value="student_enrolled">
+                        <label for="student_enrolled" th:text="#{catalogue.sort.student.enrolled}"/><br>
+                    </td>
+                    <td>
+                        <input type="radio" id="ascending" name="order" value="ascending">
+                        <label for="ascending" th:text="#{catalogue.order.ascending}"/><br>
+                        <input type="radio" id="descending" name="order" value="descending">
+                        <label for="descending" th:text="#{catalogue.order.descending}"/><br>
+                    </td>
+                    <td>
+                        <input type="radio" id="2" name="recordsPerPage" value="2">
+                        <label for="ascending">2</label><br>
+                        <input type="radio" id="5" name="recordsPerPage" value="5">
+                        <label for="descending">5</label><br>
+                        <input type="radio" id="10" name="recordsPerPage" value="10">
+                        <label for="ascending">10</label><br>
+                        <input type="radio" id="25" name="recordsPerPage" value="25">
+                        <label for="descending">25</label><br>
+                    </td>
+                </tr>
+                </tbody>
+            </table>
+        </div>
+        <input type="submit" th:value="#{catalogue.apply}">
+        <input type="reset" th:value="#{catalogue.reset}">
+    </form>
+</div>
+
+
+<h3 class="center" th:text="#{catalogue.course.title}"/>
+<div class="row justify-content-center">
+    <div class="row col-md-8">
+        <table class="table table-bordered table-sm">
+            <thead class="thead-light">
+            <tr>
+                <th th:text="#{catalogue.course.name}"/>
+                <th th:text="#{catalogue.course.theme}"/>
+                <th th:text="#{catalogue.course.start.date}"/>
+                <th th:text="#{catalogue.course.end.date}"/>
+                <th th:text="#{catalogue.course.course.status}"/>
+                <span sec:authorize="hasAuthority('Student')" class="navbar-nav">
+                        <th th:text="#{catalogue.course.student.option}"/>
+                    </span>
+                <span sec:authorize="hasAuthority('Admin')" class="navbar-nav">
+                        <th th:text="#{catalogue.course.admin.option}"/>
+                    </span>
+            </tr>
+            </thead>
+            <tbody>
+            <tr th:each="course: ${courses}">
+                <td th:text="${course.name}"/>
+                <td th:text="${course.theme}"/>
+                <td th:text="${#temporals.format(course.startDate, 'dd-MM-yyyy HH:mm')}"/>
+                <td th:text="${#temporals.format(course.endDate, 'dd-MM-yyyy HH:mm')}"/>
+                <td th:text="${course.courseStatus}"/>
+            </tr>
+            </tbody>
+        </table>
+
+
+
+
+        <nav aria-label="navigation for courses">
+            <ul class="pagination">
+                <span th:if="${page !=  0}">
+                    <li class="page-item">
+                        <a class="page-link"
+                           th:href="${url}?${page+ '-' + 1}"
+                           th:text="#{catalogue.course.page.previous}">
+                        </a>
+                    </li>
+                </span>
+
+<!--                <c:forEach begin="1" end="${noOfPages}" var="i">-->
+<!--                    <c:choose>-->
+<!--                        <c:when test="${currentPage eq i}">-->
+<!--                            <c:if test="${1 != noOfPages}">-->
+<!--                                <li class="page-item">-->
+<!--                                    <a class="page-link"-->
+<!--                                       href="${path}&page=${i}${themeAttr}${sortAttr}${orderAttr}${recordsPerPageAttr}">${i}-->
+<!--                                    </a>-->
+<!--                                </li>-->
+<!--                            </c:if>-->
+<!--                        </c:when>-->
+<!--                        <c:otherwise>-->
+<!--                            <li class="page-item">-->
+<!--                                <a class="page-link"-->
+<!--                                   href="${path}&page=${i}${themeAttr}${sortAttr}${orderAttr}${recordsPerPageAttr}">${i}-->
+<!--                                </a>-->
+<!--                            </li>-->
+<!--                        </c:otherwise>-->
+<!--                    </c:choose>-->
+<!--                </c:forEach>-->
+
+                <span th:if="${page lt  noOfPages}">
+                    <li class="page-item">
+                        <a class="page-link"
+                           th:href="@{  ${url} + '?' + page + '=' + ${page+1}  }"
+                           th:text="#{catalogue.course.page.next}">
+                        </a>
+                    </li>
+                </span>
+            </ul>
+        </nav>
+    </div>
+</div>
 
 <div th:replace="fragments/bootstrapScripts :: bootstrapScripts"></div>
 </body>

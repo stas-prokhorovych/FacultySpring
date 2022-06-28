@@ -22,7 +22,7 @@ public class UserController {
         if(user.isPresent()) {
             model.addAttribute("user", user.get());
         } else {
-            return "error/pageNotFound";
+            return "414";
         }
         return "profile";
     }
