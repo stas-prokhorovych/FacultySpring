@@ -19,12 +19,10 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
     private final UserDetailsServiceImpl userService;
     private final PasswordEncoder encoder;
 
-
     @Override
     protected void configure(AuthenticationManagerBuilder auth) throws Exception {
         auth.userDetailsService(userService)
                 .passwordEncoder(encoder);
-
     }
 
     @Override
@@ -50,9 +48,5 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
                     .invalidateHttpSession(true)
                     .clearAuthentication(true)
                     .permitAll();
-//                .and()
-//                .exceptionHandling()
-//                .accessDeniedPage("/403");
     }
-
 }

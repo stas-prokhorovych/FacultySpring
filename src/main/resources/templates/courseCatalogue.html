@@ -13,8 +13,6 @@
 <h3 class="center" th:text="#{catalogue.filter}"/>
 <div class="row justify-content-center">
     <form th:action="@{/course-catalogue}">
-        <input type="hidden" name="command" value="COURSE_CATALOGUE">
-
         <div class="row col-md-13">
             <table class="table table-bordered table-sm">
                 <thead class="thead-light">
@@ -42,8 +40,7 @@
                         <select name="teacher" id="teacher">
                             <option value="" selected disabled hidden th:text="#{catalogue.all}"></option>
                             <span th:each="teacher: ${teacherForForm}">
-                                <option th:value="${teacher.id}"
-                                        th:text="${teacher.firstName + ' ' + teacher.lastName}"/>
+                                <option th:value="${teacher.id}" th:text="${teacher.firstName + ' ' + teacher.lastName}"/>
                             </span>
                         </select>
                     </td>
@@ -62,13 +59,13 @@
                         <label for="descending" th:text="#{catalogue.order.descending}"/><br>
                     </td>
                     <td>
-                        <input type="radio" id="2" name="recordsPerPage" value="2">
+                        <input type="radio" id="2" name="size" value="2">
                         <label for="ascending">2</label><br>
-                        <input type="radio" id="5" name="recordsPerPage" value="5">
+                        <input type="radio" id="5" name="size" value="5">
                         <label for="descending">5</label><br>
-                        <input type="radio" id="10" name="recordsPerPage" value="10">
+                        <input type="radio" id="10" name="size" value="10">
                         <label for="ascending">10</label><br>
-                        <input type="radio" id="25" name="recordsPerPage" value="25">
+                        <input type="radio" id="25" name="size" value="25">
                         <label for="descending">25</label><br>
                     </td>
                 </tr>
@@ -86,70 +83,118 @@
     <div class="row col-md-8">
         <table class="table table-bordered table-sm">
             <thead class="thead-light">
-            <tr>
-                <th th:text="#{catalogue.course.name}"/>
-                <th th:text="#{catalogue.course.theme}"/>
-                <th th:text="#{catalogue.course.start.date}"/>
-                <th th:text="#{catalogue.course.end.date}"/>
-                <th th:text="#{catalogue.course.course.status}"/>
-                <span sec:authorize="hasAuthority('Student')" class="navbar-nav">
-                        <th th:text="#{catalogue.course.student.option}"/>
+                <tr>
+                    <th th:text="#{catalogue.course.name}"/>
+                    <th th:text="#{catalogue.course.theme}"/>
+                    <th th:text="#{catalogue.course.start.date}"/>
+                    <th th:text="#{catalogue.course.end.date}"/>
+                    <th th:text="#{catalogue.course.course.status}"/>
+                    <th th:text="#{catalogue.course.student.enrolled}"/>
+                    <th th:text="#{catalogue.course.teacher}"/>
+                    <span sec:authorize="hasAuthority('Student')" class="navbar-nav">
+                            <th th:text="#{catalogue.course.student.option}"/>
                     </span>
-                <span sec:authorize="hasAuthority('Admin')" class="navbar-nav">
-                        <th th:text="#{catalogue.course.admin.option}"/>
+                    <span sec:authorize="hasAuthority('Admin')" class="navbar-nav">
+                            <th th:text="#{catalogue.course.admin.option}"/>
                     </span>
-            </tr>
+                </tr>
             </thead>
             <tbody>
-            <tr th:each="course: ${courses}">
-                <td th:text="${course.name}"/>
-                <td th:text="${course.theme}"/>
-                <td th:text="${#temporals.format(course.startDate, 'dd-MM-yyyy HH:mm')}"/>
-                <td th:text="${#temporals.format(course.endDate, 'dd-MM-yyyy HH:mm')}"/>
-                <td th:text="${course.courseStatus}"/>
-            </tr>
+                    <tr th:each="course,iter: ${courses}">
+                        <td th:text="${course.name}"/>
+                        <td th:text="${course.theme}"/>
+                        <td th:text="${#temporals.format(course.startDate, 'dd-MM-yyyy HH:mm')}"/>
+                        <td th:text="${#temporals.format(course.endDate, 'dd-MM-yyyy HH:mm')}"/>
+                        <td th:text="${course.courseStatus}"/>
+
+                        <th:block th:each="i: ${#numbers.sequence(0, noOfPages)}">
+                            <span th:if="${i == iter.index}">
+                                <span th:each="nOfStudents,iter: ${studentsEnrolled}">
+                                    <span th:if="${i == iter.index}">
+                                        <td th:text="${nOfStudents}"/>
+                                    </span>
+                                </span>
+                                <span th:each="teacher, iter: ${teachers}">
+                                     <span th:if="${i == iter.index}">
+                                         <td th:text="${teacher.lastName + ' '+ teacher.firstName}"/>
+                                     </span>
+                                </span>
+                            </span>
+                        </th:block>
+
+
+                        <span sec:authorize="hasAuthority('Student')" class="navbar-nav">
+                            <span th:if="${true == true}">
+                                <td>
+                                    <form method="post" th:action="@{/student/enroll}">
+                                        <input type="number" hidden name="student-id" value="${sessionScope.id}"/>
+                                        <input type="number" hidden name="course-id" value="${course.id}"/>
+                                        <input class="btn btn-success" type="submit" name="enroll" th:value="#{catalogue.course.enroll}"/>
+                                    </form>
+                                </td>
+                            </span>
+                            <span th:unless="${true == false}">
+                                <td>
+                                    <form method="post" th:action="@{/student/leave}">
+                                        <input type="number" hidden name="student-id" value="${sessionScope.id}"/>
+                                        <input type="number" hidden name="course-id" value="${course.id}"/>
+                                        <input class="btn btn-danger" type="submit" name="enroll" th:value="#{catalogue.course.leave}"/>
+                                    </form>
+                                </td>
+                            </span>
+                        </span>
+
+
+                        <span sec:authorize="hasAuthority('Admin')" class="navbar-nav">
+                            <td>
+                                <form method="post" th:action="@{/admin/delete-course}">
+                                   <input type="number" hidden name="courseId" th:value="${course.id}"/>
+                                   <input class="btn btn-danger" type="submit" name="delete" th:value="#{catalogue.course.delete}"/>
+                                </form><br>
+                                <form method="post" th:action="@{/admin/update-course}">
+                                   <input type="number" hidden name="courseId" th:value="${course.id}"/>
+                                   <input class="btn btn-warning" type="submit" th:value="#{catalogue.course.update}"/>
+                                </form><br>
+                            </td>
+                        </span>
+                    </tr>
             </tbody>
         </table>
 
-
-
-
         <nav aria-label="navigation for courses">
             <ul class="pagination">
-                <span th:if="${page !=  0}">
+                <span th:if="${page !=  1}">
                     <li class="page-item">
                         <a class="page-link"
-                           th:href="${url}?${page+ '-' + 1}"
+                           th:href="@{ ${url} + '?' + page + '=' + ${page - 1} + '&' + size + '=' + ${size} }"
                            th:text="#{catalogue.course.page.previous}">
                         </a>
                     </li>
                 </span>
 
-<!--                <c:forEach begin="1" end="${noOfPages}" var="i">-->
-<!--                    <c:choose>-->
-<!--                        <c:when test="${currentPage eq i}">-->
-<!--                            <c:if test="${1 != noOfPages}">-->
-<!--                                <li class="page-item">-->
-<!--                                    <a class="page-link"-->
-<!--                                       href="${path}&page=${i}${themeAttr}${sortAttr}${orderAttr}${recordsPerPageAttr}">${i}-->
-<!--                                    </a>-->
-<!--                                </li>-->
-<!--                            </c:if>-->
-<!--                        </c:when>-->
-<!--                        <c:otherwise>-->
-<!--                            <li class="page-item">-->
-<!--                                <a class="page-link"-->
-<!--                                   href="${path}&page=${i}${themeAttr}${sortAttr}${orderAttr}${recordsPerPageAttr}">${i}-->
-<!--                                </a>-->
-<!--                            </li>-->
-<!--                        </c:otherwise>-->
-<!--                    </c:choose>-->
-<!--                </c:forEach>-->
+                <th:block th:each="i: ${#numbers.sequence(1, noOfPages)}">
+                    <span th:if="${page ==  i}">
+                        <li class="page-item">
+                            <a class="page-link"
+                               th:href="@{ ${url} + '?' + page + '=' + ${i} + '&' + size + '=' + ${size} }"
+                               th:text="${i}">
+                            </a>
+                        </li>
+                    </span>
+                    <span th:unless="${page ==  i}">
+                        <li class="page-item">
+                            <a class="page-link"
+                               th:href="@{ ${url} + '?' + page + '=' + ${i} + '&' + size + '=' + ${size} }"
+                               th:text="${i}">
+                            </a>
+                        </li>
+                    </span>
+                </th:block>
 
                 <span th:if="${page lt  noOfPages}">
                     <li class="page-item">
                         <a class="page-link"
-                           th:href="@{  ${url} + '?' + page + '=' + ${page+1}  }"
+                           th:href="@{  ${url} + '?' + page + '=' + ${page + 1} + '&' + size + '=' + ${size}}"
                            th:text="#{catalogue.course.page.next}">
                         </a>
                     </li>

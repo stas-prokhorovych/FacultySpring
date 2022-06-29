@@ -56,6 +56,10 @@
                                 <input type="text" id="phone" name="phoneNumber" th:field="*{phoneNumber}" class="form-control form-control-lg"/>
                             </div>
 
+                            <div class="g-recaptcha" data-sitekey="6Lc_oHUgAAAAAG0P3EUS26BlHURZT1mYJGGd5p3X" ></div>
+                            <div id="captcha-error" class="error"></div>
+                            <br>
+
 
                             <button class="btn btn-primary btn-lg btn-block" type="submit" th:text="#{signup.signup}"></button>
                         </div>
@@ -65,6 +69,9 @@
         </div>
     </section>
 </form>
+
+<script src="https://www.google.com/recaptcha/api.js" async defer></script>
+<script type="text/javascript" src="/js/captchaCheck.js"></script>
 
 <div th:insert="fragments/bootstrapScripts :: bootstrapScripts"></div>
 </body>

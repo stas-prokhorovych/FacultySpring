@@ -22,7 +22,7 @@
 
                             <div class="form-outline mb-4">
                                 <label for="users" th:text="#{add.teacher.users}"></label>
-                                <select name="students" id="users">
+                                <select name="studentId" id="users">
                                     <span th:each="student: ${students}">
                                         <option th:value="${student.id}" th:text="${student.firstName + ' ' + student.lastName}"/>
                                     </span>
@@ -31,7 +31,7 @@
 
                             <div class="form-outline mb-4">
                                 <label for="choose-course" th:text="#{add.teacher.courses}"></label>
-                                <select name="courses" id="choose-course">
+                                <select name="courseId" id="choose-course">
                                     <span th:each="course: ${courses}">
                                         <option th:value="${course.id}" th:text="${course.name}"/>
                                     </span>
@@ -60,7 +60,7 @@
 
                             <div class="form-outline mb-4">
                                 <label for="teachers" th:text="#{add.teacher.teachers}"></label>
-                                <select name="teachers" id="teachers">
+                                <select name="teacherId" id="teachers">
                                     <span th:each="teacher: ${teachers}">
                                         <option th:value="${teacher.id}" th:text="${teacher.firstName + ' ' + teacher.lastName}"/>
                                     </span>
@@ -69,7 +69,7 @@
 
                             <div class="form-outline mb-4">
                                 <label for="courses" th:text="#{add.teacher.courses}"></label>
-                                <select name="courses" id="courses">
+                                <select name="courseId" id="courses">
                                     <span th:each="course: ${courses}">
                                         <option th:value="${course.id}" th:text="${course.name}"/>
                                     </span>

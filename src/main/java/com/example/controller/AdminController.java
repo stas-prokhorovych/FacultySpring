@@ -17,8 +17,6 @@ import javax.validation.Valid;
 import java.util.List;
 import java.util.Optional;
 
-import static com.example.textconstants.Pages.SIGNUP_PAGE;
-
 @Controller
 @RequestMapping("/admin")
 @AllArgsConstructor
@@ -39,27 +37,44 @@ public class AdminController {
 
     @GetMapping("/add-course")
     public String addCourseForm(Model model) {
+        List<User> teachers = userRepository.findByRole("Teacher");
+        model.addAttribute("teachers", teachers);
         model.addAttribute("course", new Course());
         return "addCourse";
     }
 
     @PostMapping("/add-course")
-    public String addCourse(@Valid Course course, BindingResult result, Model model) {
-        if(result.hasErrors()) {
+    public String addCourse(@Valid Course course, BindingResult result,
+                            @RequestParam Long lecturerId,
+                            Model model) {
+        if (result.hasErrors()) {
+            List<User> teachers = userRepository.findByRole("Teacher");
+            model.addAttribute("teachers", teachers);
             return "addCourse";
         }
 
         Optional<Course> courseFromDb = courseRepository.findByName(course.getName());
-        if(courseFromDb.isPresent()) {
+        if (courseFromDb.isPresent()) {
             model.addAttribute("dataError", "Course with such name already exist");
-            return SIGNUP_PAGE;
+            return "redirect:add-course";
         }
 
-        return "redirect:addCourse";
+        if(lecturerId == null) {
+            course.setIdLecturer(null);
+            course.setCourseStatus("Closed, no teacher assigned yet");
+        } else {
+            User teacher = userRepository.findUserById(lecturerId);
+            course.setIdLecturer(teacher);
+            course.setCourseStatus("Opened for registration");
+        }
+
+        courseRepository.addCourse(course);
+
+        return "redirect:add-course";
     }
 
     @GetMapping("/add-teacher")
-    public String addTeacher(Model model) {
+    public String addTeacherInfo(Model model) {
         List<User> students = userRepository.findNewUser("Student");
         List<Course> courses = courseRepository.findByCourseStatus("Closed, no teacher assigned yet");
         List<User> teachers = userRepository.getAllUsersByRole("Teacher");
@@ -71,9 +86,42 @@ public class AdminController {
         return "addTeacher";
     }
 
+    @PostMapping("/add-teacher")
+    public String addTeacher(@RequestParam Long studentId,
+                             @RequestParam Long courseId) {
+        userRepository.createTeacher("Teacher", studentId);
+        courseRepository.assignCourse(studentId, "Opened for registration", courseId);
+        return "redirect:add-teacher";
+    }
+
+
+    @PostMapping("/assign-teacher")
+    public String assignTeacher(@RequestParam Long teacherId,
+                              @RequestParam Long courseId) {
+        courseRepository.assignCourse(teacherId, "Opened for registration", courseId);
+        return "redirect:add-teacher";
+    }
+
+
     @PostMapping("/student-access")
-    public String userAccess(@RequestParam Long studentId, Model model) {
-//        userRepository.changeUserAccess(studentId);
-        return "userCatalogue";
+    public String userAccess(@RequestParam Long studentId,
+                             @RequestParam Integer userAccess) {
+        userRepository.changeUserAccess(userAccess, studentId);
+        return "redirect:users";
+    }
+
+
+    @PostMapping("/delete-course")
+    public String deleteCourse(@RequestParam Long courseId) {
+        courseRepository.deleteById(courseId);
+        return "redirect:/course-catalogue";
+    }
+
+
+    @PostMapping("/update-course")
+    public String updateCourse(@RequestParam Long courseId) {
+
+
+        return "redirect:/course-catalogue";
     }
 }
