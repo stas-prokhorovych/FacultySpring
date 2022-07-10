@@ -3,6 +3,7 @@ package com.example.model;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+import org.springframework.format.annotation.DateTimeFormat;
 
 import javax.persistence.*;
 import javax.validation.constraints.NotEmpty;
@@ -29,10 +30,12 @@ public class Course {
     @Column(name = "theme", nullable = false)
     private String theme;
 
-    @Column(name = "start_date", nullable = false)
+//    @Column(name = "start_date", nullable = false)
+    @DateTimeFormat(pattern = "yyyy-MM-dd'T'HH:mm")
     private LocalDateTime startDate;
 
-    @Column(name = "end_date", nullable = false)
+//    @Column(name = "end_date", nullable = false)
+    @DateTimeFormat(pattern = "yyyy-MM-dd'T'HH:mm")
     private LocalDateTime endDate;
 
     @Column(name = "course_status", nullable = false)

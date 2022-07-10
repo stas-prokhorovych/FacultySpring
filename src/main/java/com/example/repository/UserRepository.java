@@ -37,4 +37,14 @@ public interface UserRepository extends JpaRepository<User, Long> {
     @Modifying
     @Query(value = "UPDATE user SET user.role=? WHERE id=?", nativeQuery = true)
     void createTeacher(String role, Long studentId);
+
+    @Transactional
+    @Modifying
+    @Query(value = "INSERT INTO course_student(student_id, course_id) VALUES (?, ?)", nativeQuery = true)
+    void enrollStudentOnCourse(Long userId, Long courseId);
+
+    @Transactional
+    @Modifying
+    @Query(value = "DELETE FROM course_student WHERE student_id=? AND course_id=?", nativeQuery = true)
+    void leaveCourse(Long userId, Long courseId);
 }

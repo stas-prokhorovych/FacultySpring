@@ -15,7 +15,6 @@ import java.util.Optional;
 public class UserController {
     private final UserRepository userRepository;
 
-
     @GetMapping("/profile")
     public String profile(Principal principal, Model model) {
         Optional<User> user = userRepository.findUserByLogin(principal.getName());

@@ -15,6 +15,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
+import java.sql.Timestamp;
 import java.time.LocalDateTime;
 import java.util.List;
 import java.util.stream.Stream;
@@ -51,8 +52,8 @@ public class TeacherController {
 
     @PostMapping("/end-course")
     public String endCourse(@RequestParam Long courseId,
-                            @RequestParam(value="studentId") String[] studentIds,
-                            @RequestParam(value="mark") String[] studentMarks) {
+                            @RequestParam(value = "studentId") String[] studentIds,
+                            @RequestParam(value = "mark") String[] studentMarks) {
 
         int[] marks = Stream
                 .of(studentMarks)
@@ -100,9 +101,11 @@ public class TeacherController {
             }
         }
 
+        for (int i = 0; i < marks.length; i++) {
+            journalRepository.endCourse(studentIds[i], marks[i], markCode[i], markExplanation[i]);
+        }
 
-//        journalRepository.endCourse(courseId, studentIds, marks, markCode, markExplanation);
-
+        courseRepository.finishCourse("Finished", Timestamp.valueOf(LocalDateTime.now()), courseId);
 
         return "redirect:journal";
     }

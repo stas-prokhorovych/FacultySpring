@@ -32,7 +32,7 @@ public class CourseCatalogueController {
                                       @PageableDefault(sort = {"id"}, direction = Sort.Direction.ASC, size = 5) Pageable pageable,
                                       @RequestParam(value = "page", required = false, defaultValue = "1") Integer page,
                                       @RequestParam(value = "size", required = false, defaultValue = "5") Integer size
-                                      ) {
+    ) {
 
 
 //        pageable = PageRequest.of(page, size, Sort.by("name").descending());
@@ -41,7 +41,7 @@ public class CourseCatalogueController {
         List<User> teacherForForm = userRepository.findByRole("Teacher");
 
         Page<Course> courses;
-        if(principal != null) {
+        if (principal != null) {
             courses = courseRepository.findByCourseStatusNot("Closed, no teacher assigned yet", pageable);
         } else {
             courses = courseRepository.findByCourseStatus("Opened for registration", pageable);
@@ -49,33 +49,27 @@ public class CourseCatalogueController {
 
         List<Integer> studentsEnrolled = new LinkedList<>();
         List<User> teachers = new LinkedList<>();
-        for(Course course: courses.getContent()) {
+        for (Course course : courses.getContent()) {
             studentsEnrolled.add(courseRepository.findStudentsEnrolled(course.getId()));
             teachers.add(userRepository.findUserById(course.getIdLecturer().getId()));
         }
 
 
-
-        if(principal != null) {
+        if (principal != null) {
             String login = principal.getName();
-            Optional<User> userFromDb = userRepository.findUserByLogin(login);
-            if(userFromDb.isPresent()) {
-                User user = userFromDb.get();
-                if(user.getRole().equals("Student")) {
-                    Long studentId = user.getId();
-                    List<Boolean> courseAlreadySelected = new LinkedList<>();
-                    for(Course course: courses.getContent()) {
-                        Integer value = courseRepository.findSelectedCourse(studentId, course.getId());
-                        if(value == null) {
-                            courseAlreadySelected.add(true);
-                        } else {
-                            courseAlreadySelected.add(false);
-                        }
+            User user = userRepository.findUserByLogin(login).get();
+            if (user.getRole().equals("Student")) {
+                Long studentId = user.getId();
+                List<Boolean> courseAlreadySelected = new LinkedList<>();
+                for (Course course : courses.getContent()) {
+                    Integer value = courseRepository.findSelectedCourse(studentId, course.getId());
+                    if (value == null) {
+                        courseAlreadySelected.add(false);
+                    } else {
+                        courseAlreadySelected.add(true);
                     }
-
-
-                    model.addAttribute("courseAlreadySelected", courseAlreadySelected);
                 }
+                model.addAttribute("courseAlreadySelected", courseAlreadySelected);
             }
         }
 

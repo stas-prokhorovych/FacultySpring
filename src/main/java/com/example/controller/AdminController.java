@@ -5,6 +5,7 @@ import com.example.model.User;
 import com.example.repository.CourseRepository;
 import com.example.repository.UserRepository;
 import lombok.AllArgsConstructor;
+import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
@@ -14,6 +15,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
 import javax.validation.Valid;
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
 
@@ -44,8 +46,9 @@ public class AdminController {
     }
 
     @PostMapping("/add-course")
-    public String addCourse(@Valid Course course, BindingResult result,
-                            @RequestParam Long lecturerId,
+    public String addCourse(@Valid Course course,
+                            BindingResult result,
+                            @RequestParam(required = false) Long lecturerId,
                             Model model) {
         if (result.hasErrors()) {
             List<User> teachers = userRepository.findByRole("Teacher");
@@ -68,7 +71,8 @@ public class AdminController {
             course.setCourseStatus("Opened for registration");
         }
 
-        courseRepository.addCourse(course);
+        courseRepository.addCourse(course.getName(), course.getTheme(), course.getStartDate(),
+                course.getEndDate(), course.getIdLecturer(), course.getCourseStatus());
 
         return "redirect:add-course";
     }
@@ -117,10 +121,32 @@ public class AdminController {
         return "redirect:/course-catalogue";
     }
 
+    @GetMapping("/update-course")
+    public String updateCourseForm(Model model, @RequestParam Long courseId) {
+        Course course = courseRepository.findById(courseId).get();
+        model.addAttribute("course", course);
+        return "updateCourse";
+    }
+
 
     @PostMapping("/update-course")
-    public String updateCourse(@RequestParam Long courseId) {
+    public String updateCourse(@Valid Course course,
+                               BindingResult result,
+                               Model model) {
+        if (result.hasErrors()) {
+            List<User> teachers = userRepository.findByRole("Teacher");
+            model.addAttribute("teachers", teachers);
+            return "updateCourse";
+        }
 
+
+        if(course.getIdLecturer() == null) {
+            courseRepository.updateCourse(course.getName(), course.getTheme(),
+                    course.getStartDate(), course.getEndDate(), course.getId());
+        } else {
+            courseRepository.updateCourse(course.getName(), course.getTheme(),
+                    course.getStartDate(), course.getEndDate(), course.getIdLecturer().getId(), course.getId());
+        }
 
         return "redirect:/course-catalogue";
     }

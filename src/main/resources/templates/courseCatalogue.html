@@ -100,6 +100,7 @@
                 </tr>
             </thead>
             <tbody>
+
                     <tr th:each="course,iter: ${courses}">
                         <td th:text="${course.name}"/>
                         <td th:text="${course.theme}"/>
@@ -122,28 +123,32 @@
                             </span>
                         </th:block>
 
-
-                        <span sec:authorize="hasAuthority('Student')" class="navbar-nav">
-                            <span th:if="${true == true}">
-                                <td>
-                                    <form method="post" th:action="@{/student/enroll}">
-                                        <input type="number" hidden name="student-id" value="${sessionScope.id}"/>
-                                        <input type="number" hidden name="course-id" value="${course.id}"/>
-                                        <input class="btn btn-success" type="submit" name="enroll" th:value="#{catalogue.course.enroll}"/>
-                                    </form>
-                                </td>
+                        <th:block th:each="i: ${#numbers.sequence(0, noOfPages)}">
+                            <span th:if="${i == iter.index}">
+                                <span sec:authorize="hasAuthority('Student')" class="navbar-nav">
+                                    <span th:each="selected,iter: ${courseAlreadySelected}">
+                                        <span th:if="${i == iter.index}">
+                                            <span th:if="${selected eq false}">
+                                                <td>
+                                                    <form method="post" th:action="@{/student/enroll}">
+                                                        <input type="number" hidden name="courseId" th:value="${course.id}"/>
+                                                        <input class="btn btn-success" type="submit" name="enroll" th:value="#{catalogue.course.enroll}"/>
+                                                    </form>
+                                                </td>
+                                            </span>
+                                            <span th:unless="${selected eq false}">
+                                                <td>
+                                                    <form method="post" th:action="@{/student/leave}">
+                                                        <input type="number" hidden name="courseId" th:value="${course.id}"/>
+                                                        <input class="btn btn-danger" type="submit" name="enroll" th:value="#{catalogue.course.leave}"/>
+                                                    </form>
+                                                </td>
+                                            </span>
+                                        </span>
+                                    </span>
+                                </span>
                             </span>
-                            <span th:unless="${true == false}">
-                                <td>
-                                    <form method="post" th:action="@{/student/leave}">
-                                        <input type="number" hidden name="student-id" value="${sessionScope.id}"/>
-                                        <input type="number" hidden name="course-id" value="${course.id}"/>
-                                        <input class="btn btn-danger" type="submit" name="enroll" th:value="#{catalogue.course.leave}"/>
-                                    </form>
-                                </td>
-                            </span>
-                        </span>
-
+                        </th:block>
 
                         <span sec:authorize="hasAuthority('Admin')" class="navbar-nav">
                             <td>
@@ -151,7 +156,7 @@
                                    <input type="number" hidden name="courseId" th:value="${course.id}"/>
                                    <input class="btn btn-danger" type="submit" name="delete" th:value="#{catalogue.course.delete}"/>
                                 </form><br>
-                                <form method="post" th:action="@{/admin/update-course}">
+                                <form method="get" th:action="@{/admin/update-course}">
                                    <input type="number" hidden name="courseId" th:value="${course.id}"/>
                                    <input class="btn btn-warning" type="submit" th:value="#{catalogue.course.update}"/>
                                 </form><br>
