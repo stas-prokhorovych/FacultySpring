@@ -9,6 +9,9 @@ import javax.persistence.*;
 @Entity
 @Getter
 @Setter
+@Table(uniqueConstraints={
+        @UniqueConstraint(columnNames = {"student_id", "course_id"})
+})
 @NoArgsConstructor
 public class CourseStudent {
     @Id
@@ -24,6 +27,6 @@ public class CourseStudent {
     @JoinColumn(name = "course_id")
     private Course course;
 
-    @OneToOne(mappedBy = "courseStudent")
+    @OneToOne(mappedBy = "courseStudent", cascade = CascadeType.ALL, orphanRemoval = true)
     private Journal journal;
 }

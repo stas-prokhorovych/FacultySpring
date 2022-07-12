@@ -1,7 +1,6 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org"
-      xmlns="http://www.w3.org/1999/xhtml"
-      xmlns:sec="https://www.thymeleaf.org/thymeleaf-extras-springsecurity3">
+      xmlns="http://www.w3.org/1999/xhtml">
 <head>
     <meta charset="UTF-8">
     <title th:text="#{login.login}">Login</title>
@@ -20,27 +19,24 @@
 
                             <h3 class="mb-4" th:text="#{login.login}"/>
 
-                            <div class="data-error" th:if="${param.error}">
-                                Invalid username and password.
+                            <div class="data-error" th:if="${param.error}" th:text="#{login.data.error}"/>
+
+                            <div class="data-info" th:if="${param.logout}" th:text="#{login.logout}"/>
+
+                            <div class="form-outline mb-4">
+                                <label class="form-label" for="username"><strong th:text="#{login.login}"/></label>
+                                <input type="text" id="username" name="username" class="form-control form-control-lg"/>
                             </div>
 
-                            <div class="data-info" th:if="${param.logout}">
-                                You have been logged out.
+                            <div class="form-outline mb-4">
+                                <label class="form-label" for="password"><strong th:text="#{login.password}"/></label>
+                                <input type="password" id="password" name="password"
+                                       class="form-control form-control-lg"/>
                             </div>
 
-                                <div class="form-outline mb-4">
-                                    <label class="form-label" for="username"><strong th:text="#{login.login}"/></label>
-                                    <input type="text" id="username" name="username" class="form-control form-control-lg"/>
-                                </div>
+                            <button class="btn btn-primary btn-lg btn-block" type="submit"
+                                    th:text="#{login.login}"></button>
 
-                                <div class="form-outline mb-4">
-                                    <label class="form-label" for="password"><strong th:text="#{login.password}"/></label>
-                                    <input type="password" id="password" name="password" class="form-control form-control-lg"/>
-                                </div>
-
-                                <button class="btn btn-primary btn-lg btn-block" type="submit" th:text="#{login.login}"></button>
-
-                            </div>
                         </div>
                     </div>
                 </div>

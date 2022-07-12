@@ -18,10 +18,9 @@ public class Journal {
     @Column(name = "id")
     private Long id;
 
-    @OneToOne(cascade = CascadeType.ALL)
+    @OneToOne( cascade = CascadeType.ALL, orphanRemoval = true)
     @JoinColumn(name = "id_student_course", referencedColumnName = "id")
     private CourseStudent courseStudent;
-
 
     private int markPoints;
     private String markCode;

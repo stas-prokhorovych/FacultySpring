@@ -75,16 +75,24 @@
             </tr>
             </thead>
             <tbody>
-            <tr th:each="course: ${finishedCourses}">
+            <tr th:each="course, iter: ${finishedCourses}">
                 <td th:text="${course.name}"/>
                 <td th:text="${course.theme}"/>
                 <td th:text="${#temporals.format(course.startDate, 'dd-MM-yyyy HH:mm')}"/>
                 <td th:text="${#temporals.format(course.endDate, 'dd-MM-yyyy HH:mm')}"/>
-                <span th:each="mark: ${journalInfo}">
-                    <td th:text="${mark.markPoints}"/>
-                    <td th:text="${mark.markCode}"/>
-                    <td th:text="${mark.markExplanation}"/>
-                </span>
+
+                <th:block th:each="i: ${#numbers.sequence(0, journalInfo.size())}">
+                    <span th:if="${i == iter.index}">
+                        <span th:each="mark,iter: ${journalInfo}">
+                            <span th:if="${i == iter.index}">
+                                <td th:text="${mark.markPoints}"/>
+                                <td th:text="${mark.markCode}"/>
+                                <td th:text="${mark.markExplanation}"/>
+                            </span>
+                        </span>
+                    </span>
+                </th:block>
+
             </tr>
             </tbody>
         </table>

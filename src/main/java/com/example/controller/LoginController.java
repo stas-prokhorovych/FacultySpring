@@ -21,7 +21,7 @@ public class LoginController {
      * @param error  arises with wrong user data
      * @param logout arises when user logged out
      * @param model  model
-     * @return page template
+     * @return login page
      */
     @GetMapping
     public String loginPage(@RequestParam(name = "error", required = false) String error,
@@ -31,5 +31,4 @@ public class LoginController {
         model.addAttribute("logout", logout != null);
         return LOGIN_PAGE;
     }
-
 }

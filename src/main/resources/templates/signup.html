@@ -9,7 +9,7 @@
 <body class="form-page">
 <div th:insert="fragments/navbar :: navbar"></div>
 
-<form id="form" th:action="@{signup}" th:object="${user}" method="POST">
+<form id="form" th:action="@{signup}" th:object="${userDTO}" method="POST">
     <section class="vh-100">
         <div class="container py-5 h-100">
             <div class="row d-flex justify-content-center align-items-center h-100">
@@ -19,7 +19,6 @@
 
                             <h3 class="mb-4" th:text="#{signup.signup}"/>
                             <div class="data-error" th:if="${dataError != null}" th:text="${dataError}">Data Error</div>
-
 
                             <div class="form-outline mb-4">
                                 <label class="form-label" for="login"><strong th:text="#{signup.login}"/></label>
@@ -31,6 +30,12 @@
                                 <label class="form-label" for="password"><strong th:text="#{signup.password}"/></label>
                                 <input type="password" id="password" name="password" th:field="*{password}" class="form-control form-control-lg"/>
                                 <div class="error" th:if="${#fields.hasErrors('password')}" th:errors="*{password}">Invalid password</div>
+                            </div>
+
+                            <div class="form-outline mb-4">
+                                <label class="form-label" for="password"><strong th:text="#{signup.repeat.password}"/></label>
+                                <input type="password" id="passwordRepeat" name="passwordRepeat" th:field="*{passwordRepeat}" class="form-control form-control-lg"/>
+                                <div class="error" th:if="${#fields.hasErrors('passwordRepeat')}" th:errors="*{passwordRepeat}">Invalid password</div>
                             </div>
 
                             <div class="form-outline mb-4">
@@ -54,12 +59,12 @@
                             <div class="form-outline mb-4">
                                 <label class="form-label" for="phone"><strong th:text="#{signup.phone}"/></label>
                                 <input type="text" id="phone" name="phoneNumber" th:field="*{phoneNumber}" class="form-control form-control-lg"/>
+                                <div class="error" th:if="${#fields.hasErrors('phoneNumber')}" th:errors="*{phoneNumber}">Invalid phone number</div>
                             </div>
 
                             <div class="g-recaptcha" data-sitekey="6Lc_oHUgAAAAAG0P3EUS26BlHURZT1mYJGGd5p3X" ></div>
                             <div id="captcha-error" class="error"></div>
                             <br>
-
 
                             <button class="btn btn-primary btn-lg btn-block" type="submit" th:text="#{signup.signup}"></button>
                         </div>

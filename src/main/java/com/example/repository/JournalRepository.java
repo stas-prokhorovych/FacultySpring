@@ -15,7 +15,7 @@ public interface JournalRepository extends JpaRepository<Journal, Long> {
     @Transactional
     @Modifying
     @Query(value = "INSERT INTO journal(id_student_course, mark_points, mark_code, mark_explanation) VALUES (?, ?, ?, ?)",  nativeQuery = true)
-    void endCourse(String studentId, int mark, String s, String s1);
+    void endCourse(String idStudentOnCourse, int mark, String s, String s1);
 
 
 }

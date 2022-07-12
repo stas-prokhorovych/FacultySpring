@@ -6,7 +6,6 @@ import com.example.repository.CourseRepository;
 import com.example.repository.UserRepository;
 import lombok.AllArgsConstructor;
 import org.springframework.data.domain.Page;
-import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.data.web.PageableDefault;
@@ -18,7 +17,6 @@ import org.springframework.web.bind.annotation.RequestParam;
 import java.security.Principal;
 import java.util.LinkedList;
 import java.util.List;
-import java.util.Optional;
 
 @Controller
 @AllArgsConstructor
@@ -36,6 +34,8 @@ public class CourseCatalogueController {
 
 
 //        pageable = PageRequest.of(page, size, Sort.by("name").descending());
+
+
 
         List<String> themesForForm = courseRepository.findAllThemes();
         List<User> teacherForForm = userRepository.findByRole("Teacher");

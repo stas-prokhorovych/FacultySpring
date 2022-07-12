@@ -12,8 +12,8 @@
 
 <div class="center">
     <h2 class="center" th:text="#{user.catalogue.students}"/>
-        <form method="get" action="controller">
-            <input type="hidden" name="command" value="PDF_REPORT">
+        <form method="get" th:action="@{/admin/pdf}">
+            <input type="text" hidden name="role" th:value="Student">
             <input class="btn btn-info" type="submit" name="delete" value="pdf"/>
         </form>
 </div><br>
@@ -62,8 +62,8 @@
 
 <div class="center">
     <h2 class="center" th:text="#{user.catalogue.teachers}"/>
-        <form method="get" action="controller">
-            <input type="hidden" name="command" value="PDF_REPORT">
+        <form method="get" th:action="@{/admin/pdf}">
+            <input type="text" hidden name="role" th:value="Teacher">
             <input class="btn btn-info" type="submit" name="delete" value="pdf"/>
         </form>
 </div><br>
