@@ -14,6 +14,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 
 import javax.validation.Valid;
 
+import static com.example.textconstants.Constants.ATTR_DATA_ERROR;
 import static com.example.textconstants.Pages.SIGNUP_PAGE;
 import static com.example.textconstants.Uri.*;
 
@@ -58,7 +59,7 @@ public class RegistrationController {
         try {
             userService.saveNewUser(userDTO, passwordRepeat);
         } catch (UserServiceException e) {
-            model.addAttribute("dataError", e.getMessage());
+            model.addAttribute(ATTR_DATA_ERROR, e.getMessage());
             return SIGNUP_PAGE;
         }
 

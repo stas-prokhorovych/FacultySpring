@@ -10,6 +10,7 @@ import org.springframework.web.bind.annotation.GetMapping;
 
 import java.security.Principal;
 
+import static com.example.textconstants.Constants.ATTR_DATA_ERROR;
 import static com.example.textconstants.Pages.HOME_PAGE;
 import static com.example.textconstants.Pages.PROFILE_PAGE;
 import static com.example.textconstants.Uri.PROFILE;
@@ -26,13 +27,12 @@ public class UserController {
      */
     @GetMapping(PROFILE)
     public String profile(Principal principal, Model model) {
-
         User user;
 
         try {
             user = userService.findUserByLogin(principal.getName());
         } catch (UserServiceException e) {
-            model.addAttribute("dataError", e.getMessage());
+            model.addAttribute(ATTR_DATA_ERROR, e.getMessage());
             return HOME_PAGE;
         }
 

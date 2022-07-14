@@ -22,7 +22,12 @@ public class Journal {
     @JoinColumn(name = "id_student_course", referencedColumnName = "id")
     private CourseStudent courseStudent;
 
+    @Column(name = "mark_points", nullable = false)
     private int markPoints;
+
+    @Column(name = "mark_code", nullable = false)
     private String markCode;
+
+    @Column(name = "mark_explanation", nullable = false)
     private String markExplanation;
 }

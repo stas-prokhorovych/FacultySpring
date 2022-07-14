@@ -5,7 +5,7 @@ import com.itextpdf.text.*;
 import com.itextpdf.text.pdf.PdfPCell;
 import com.itextpdf.text.pdf.PdfPTable;
 import com.itextpdf.text.pdf.PdfWriter;
-
+import org.apache.log4j.Logger;
 
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
@@ -15,6 +15,11 @@ import java.util.List;
  * Used to generate pdf report
  */
 public class Pdf {
+    private Pdf() {
+    }
+
+    private static final Logger log = Logger.getLogger(Pdf.class);
+
     public static ByteArrayInputStream export(List<User> userToPrint, String role) {
         Document document = new Document();
         ByteArrayOutputStream out = new ByteArrayOutputStream();
@@ -23,7 +28,7 @@ public class Pdf {
             Font fontTitle = FontFactory.getFont(FontFactory.HELVETICA_BOLD);
             fontTitle.setSize(18);
             Paragraph paragraph = new Paragraph(role + "s", fontTitle);
-            paragraph.setAlignment(Paragraph.ALIGN_CENTER);
+            paragraph.setAlignment(Element.ALIGN_CENTER);
 
 
             PdfPTable table = new PdfPTable(5);
@@ -63,7 +68,7 @@ public class Pdf {
             document.close();
 
         } catch (DocumentException ex) {
-
+            log.error("Can't print pdf");
         }
         return new ByteArrayInputStream(out.toByteArray());
     }

@@ -1,4 +1,5 @@
 .mvn/
+logs/
 FacultySpring.iml
 mvnw
 mvnw.cmd

@@ -11,14 +11,14 @@
 <div th:replace="fragments/navbar :: navbar"></div>
 
 
-<form id="form-add" th:action="@{/admin/update-course}" th:object="${course}" method="POST">
+<form id="form-add" th:action="@{/admin/update-course}" th:object="${courseDTO}" method="POST">
     <section class="vh-100">
         <div class="container py-5 h-100">
             <div class="row d-flex justify-content-center align-items-center h-90">
                 <div class="col-12 col-md-8 col-lg-6 col-xl-5">
                     <div class="card shadow-2-strong" style="border-radius: 1rem;">
                         <div class="card-body p-5 text-center">
-                            <input type="number" hidden name="courseId" th:field="*{id}"/>
+                            <input type="number" hidden name="updateCourseId" th:value="${updateCourseId}"/>
 
                             <h3 class="mb-4" th:text="#{add.course.create}"/>
                             <div class="data-error" th:if="${dataError != null}" th:text="${dataError}">Data Error</div>

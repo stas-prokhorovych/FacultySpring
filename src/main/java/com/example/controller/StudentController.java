@@ -20,6 +20,7 @@ import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 import java.util.LinkedList;
 import java.util.List;
 
+import static com.example.textconstants.Constants.ATTR_DATA_ERROR;
 import static com.example.textconstants.Pages.STUDENT_COURSES_PAGE;
 import static com.example.textconstants.Uri.*;
 
@@ -72,7 +73,7 @@ public class StudentController {
         try {
             courseStudentService.enrollStudentOnCourse(courseId, userId);
         } catch (UserServiceException e) {
-            redirectAttributes.addFlashAttribute("dataError", e.getMessage());
+            redirectAttributes.addFlashAttribute(ATTR_DATA_ERROR, e.getMessage());
         }
 
         return REDIRECT + COURSE_CATALOGUE;
@@ -92,7 +93,7 @@ public class StudentController {
         try {
             courseStudentService.leaveCourse(courseId, userId);
         } catch (UserServiceException e) {
-            redirectAttributes.addFlashAttribute("dataError", e.getMessage());
+            redirectAttributes.addFlashAttribute(ATTR_DATA_ERROR, e.getMessage());
         }
 
         return REDIRECT + COURSE_CATALOGUE;

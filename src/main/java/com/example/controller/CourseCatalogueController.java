@@ -2,78 +2,70 @@ package com.example.controller;
 
 import com.example.model.Course;
 import com.example.model.User;
-import com.example.repository.CourseRepository;
-import com.example.repository.UserRepository;
+import com.example.service.CourseService;
+import com.example.service.PaginationService;
+import com.example.service.UserService;
 import lombok.AllArgsConstructor;
 import org.springframework.data.domain.Page;
-import org.springframework.data.domain.Pageable;
-import org.springframework.data.domain.Sort;
-import org.springframework.data.web.PageableDefault;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
 import java.security.Principal;
-import java.util.LinkedList;
 import java.util.List;
+
+import static com.example.textconstants.Constants.ROLE_STUDENT;
+import static com.example.textconstants.Constants.ROLE_TEACHER;
+import static com.example.textconstants.Pages.COURSE_CATALOGUE_PAGE;
+import static com.example.textconstants.Uri.COURSE_CATALOGUE;
 
 @Controller
 @AllArgsConstructor
 public class CourseCatalogueController {
-    private CourseRepository courseRepository;
-    private UserRepository userRepository;
+    private PaginationService paginationService;
+    private UserService userService;
+    private CourseService courseService;
 
-    @GetMapping(value = "/course-catalogue")
+    /**
+     * @param model model
+     * @param principal current log in user if present
+     * @param page current page
+     * @param size number of pages
+     * @param theme selected theme if present
+     * @param teacher selected teacher if present
+     * @param sortWay sort way if present
+     * @param order order of sorting if present
+     * @return course catalogue page
+     */
+    @GetMapping( COURSE_CATALOGUE)
     public String showCourseCatalogue(Model model,
                                       Principal principal,
-                                      @PageableDefault(sort = {"id"}, direction = Sort.Direction.ASC, size = 5) Pageable pageable,
                                       @RequestParam(value = "page", required = false, defaultValue = "1") Integer page,
-                                      @RequestParam(value = "size", required = false, defaultValue = "5") Integer size
+                                      @RequestParam(value = "size", required = false, defaultValue = "5") Integer size,
+                                      @RequestParam(required = false, defaultValue = "") String theme,
+                                      @RequestParam(required = false, defaultValue = "") String teacher,
+                                      @RequestParam(required = false, defaultValue = "") String sortWay,
+                                      @RequestParam(required = false, defaultValue = "") String order
     ) {
-
-
-//        pageable = PageRequest.of(page, size, Sort.by("name").descending());
-
-
-
-        List<String> themesForForm = courseRepository.findAllThemes();
-        List<User> teacherForForm = userRepository.findByRole("Teacher");
-
-        Page<Course> courses;
-        if (principal != null) {
-            courses = courseRepository.findByCourseStatusNot("Closed, no teacher assigned yet", pageable);
-        } else {
-            courses = courseRepository.findByCourseStatus("Opened for registration", pageable);
-        }
-
-        List<Integer> studentsEnrolled = new LinkedList<>();
-        List<User> teachers = new LinkedList<>();
-        for (Course course : courses.getContent()) {
-            studentsEnrolled.add(courseRepository.findStudentsEnrolled(course.getId()));
-            teachers.add(userRepository.findUserById(course.getIdLecturer().getId()));
-        }
-
+        Page<Course> courses = paginationService.findCoursesByParameters(page, size, theme, teacher, sortWay, order);
+        List<String> themesForForm = courseService.findAllThemes();
+        List<User> teacherForForm = userService.findByRole(ROLE_TEACHER);
+        List<Integer> studentsEnrolled = courseService.findStudentsEnrolled(courses.getContent());
+        List<User> teachers = userService.findCoursesTeachers(courses.getContent());
 
         if (principal != null) {
-            String login = principal.getName();
-            User user = userRepository.findUserByLogin(login).get();
-            if (user.getRole().equals("Student")) {
-                Long studentId = user.getId();
-                List<Boolean> courseAlreadySelected = new LinkedList<>();
-                for (Course course : courses.getContent()) {
-                    Integer value = courseRepository.findSelectedCourse(studentId, course.getId());
-                    if (value == null) {
-                        courseAlreadySelected.add(false);
-                    } else {
-                        courseAlreadySelected.add(true);
-                    }
-                }
+            User user = userService.findUserByLogin(principal.getName());
+            if (user.getRole().equals(ROLE_STUDENT)) {
+                List<Boolean> courseAlreadySelected = courseService.findSelectedCourse( courses.getContent(), user.getId());
                 model.addAttribute("courseAlreadySelected", courseAlreadySelected);
             }
         }
 
-
+        model.addAttribute("theme", theme);
+        model.addAttribute("teacher", teacher);
+        model.addAttribute("sortWay", sortWay);
+        model.addAttribute("order", order);
         model.addAttribute("size", size);
         model.addAttribute("page", page);
         model.addAttribute("noOfPages", courses.getTotalPages());
@@ -83,6 +75,6 @@ public class CourseCatalogueController {
         model.addAttribute("courses", courses);
         model.addAttribute("studentsEnrolled", studentsEnrolled);
         model.addAttribute("teachers", teachers);
-        return "courseCatalogue";
+        return COURSE_CATALOGUE_PAGE;
     }
 }

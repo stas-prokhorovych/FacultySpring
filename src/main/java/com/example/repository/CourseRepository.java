@@ -22,6 +22,12 @@ public interface CourseRepository extends JpaRepository<Course, Long> {
 
     Page<Course> findByCourseStatus(String status, Pageable pageable);
 
+    Page<Course> findByCourseStatusAndTheme(String courseStatus, String theme, Pageable pageable);
+
+    Page<Course> findByCourseStatusAndIdLecturer(String courseStatus, User teacher, Pageable pageable);
+
+    Page<Course> findByCourseStatusAndIdLecturerAndTheme(String statusOpen, User teacher, String theme, Pageable pageable);
+
     List<Course> findByCourseStatus(String s);
 
     @Query(value = "SELECT * FROM course WHERE course_status=? AND id IN ( SELECT course_id FROM course_student WHERE student_id=?)",  nativeQuery = true)
@@ -41,9 +47,6 @@ public interface CourseRepository extends JpaRepository<Course, Long> {
     @Query(value = "SELECT DISTINCT theme FROM course",  nativeQuery = true)
     List<String> findAllThemes();
 
-    @Query(value = "SELECT * FROM course WHERE course_status <> 'Closed no teacher assigned yet'",  nativeQuery = true)
-    Page<Course> findActiveCourses(Pageable pageable);
-
     @Transactional
     @Modifying
     @Query(value = "UPDATE course SET id_lecturer=?, course_status=? WHERE id=?",  nativeQuery = true)
@@ -51,8 +54,6 @@ public interface CourseRepository extends JpaRepository<Course, Long> {
 
     @Query(value ="SELECT COUNT(id) FROM course_student WHERE course_id=?", nativeQuery = true)
     Integer findStudentsEnrolled(Long courseId);
-
-    Page<Course> findByCourseStatusNot(String status, Pageable pageable);
 
     @Query(value ="SELECT id FROM course_student WHERE student_id = ? AND course_id = ?", nativeQuery = true)
     Integer findSelectedCourse(Long studentId, Long id);
@@ -69,11 +70,19 @@ public interface CourseRepository extends JpaRepository<Course, Long> {
 
     @Transactional
     @Modifying
-    @Query(value = "UPDATE course SET name=?, theme=?, start_date=?, end_date=? WHERE id=?",  nativeQuery = true)
-    void updateCourse(String name, String theme, LocalDateTime startDate, LocalDateTime endDate, Long id);
-
-    @Transactional
-    @Modifying
     @Query(value = "UPDATE course SET course_status=?, end_date=? WHERE id=?",  nativeQuery = true)
     void finishCourse(String finished, Timestamp valueOf, Long courseId);
+
+    @Query(value = "SELECT * FROM course WHERE course_status=? ORDER BY (SELECT COUNT(course_student.id) FROM course_student WHERE course_student.course_id=course.id)",  nativeQuery = true)
+    Page<Course> findCoursesByStudentEnrolledASC(String courseStatus, Pageable pageable);
+
+    @Query(value = "SELECT * FROM course WHERE course_status=? ORDER BY (SELECT COUNT(course_student.id) FROM course_student WHERE course_student.course_id=course.id) DESC",  nativeQuery = true)
+    Page<Course> findCoursesByStudentEnrolledDESC(String courseStatus, Pageable pageable);
+
+    @Query(value = "SELECT * FROM course WHERE course_status=? ORDER BY datediff(course.end_date, course.start_date)",  nativeQuery = true)
+    Page<Course> findCoursesByDurationASC(String courseStatus, Pageable pageable);
+
+    @Query(value = "SELECT * FROM course WHERE course_status=? ORDER BY datediff(course.end_date, course.start_date) DESC",  nativeQuery = true)
+    Page<Course> findCoursesByDurationDESC(String courseStatus, Pageable pageable);
 }
+

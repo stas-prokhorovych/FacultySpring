@@ -18,6 +18,9 @@ import java.util.Locale;
 @Configuration
 public class LocaleConfig implements WebMvcConfigurer {
 
+    /**
+     * @return LocaleResolver which determine the current locale based on the session
+     */
     @Bean
     public LocaleResolver localeResolver(){
         SessionLocaleResolver sessionLocaleResolver = new SessionLocaleResolver();
@@ -26,6 +29,10 @@ public class LocaleConfig implements WebMvcConfigurer {
         return sessionLocaleResolver;
     }
 
+    /**
+     * @return LocaleChangeInterceptor that switch to a new locale
+     *         based on the value of the lang parameter appended to a request:
+     */
     @Bean
     public LocaleChangeInterceptor localeChangeInterceptor() {
         LocaleChangeInterceptor localeChangeInterceptor = new LocaleChangeInterceptor();
@@ -34,6 +41,9 @@ public class LocaleConfig implements WebMvcConfigurer {
         return localeChangeInterceptor;
     }
 
+    /**
+     * @return message source
+     */
     @Bean
     public MessageSource messageSource(){
         ReloadableResourceBundleMessageSource messageSource = new ReloadableResourceBundleMessageSource();
@@ -42,6 +52,9 @@ public class LocaleConfig implements WebMvcConfigurer {
         return messageSource;
     }
 
+    /**
+     * @param registry add localeChangeInterceptor to the application's interceptor registry
+     */
     @Override
     public void addInterceptors(InterceptorRegistry registry) {
         registry.addInterceptor(localeChangeInterceptor());

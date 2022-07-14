@@ -9,9 +9,7 @@
 <body class="form-page">
 <div th:replace="fragments/navbar :: navbar"></div>
 
-
-
-<form id="form-add" th:action="@{/admin/add-course}" th:object="${course}" method="POST">
+<form id="form-add" th:action="@{/admin/add-course}" th:object="${courseDTO}" method="POST">
     <section class="vh-100">
         <div class="container py-5 h-100">
             <div class="row d-flex justify-content-center align-items-center h-90">
@@ -21,6 +19,7 @@
 
                             <h3 class="mb-4" th:text="#{add.course.create}"/>
                             <div class="data-error" th:if="${dataError != null}" th:text="${dataError}">Data Error</div>
+
 
                             <div class="form-outline mb-4">
                                 <label class="form-label" for="name"><strong th:text="#{add.course.name}"/></label>
@@ -36,13 +35,13 @@
 
                             <div class="form-outline mb-4">
                                 <label class="form-label" for="startDate"><strong th:text="#{add.course.start.date}"/></label>
-                                    <input type="datetime-local" id="startDate" name="startDate"  th:field="*{startDate}" class="form-control form-control-lg"/>
+                                    <input type="datetime-local" id="startDate" name="startDate"  th:field="*{startDate}" class="form-control form-control-lg" required/>
                                 <div class="error" th:if="${#fields.hasErrors('startDate')}" th:errors="*{startDate}">Invalid name</div>
                             </div>
 
                             <div class="form-outline mb-4">
                                 <label class="form-label" for="endDate"><strong th:text="#{add.course.end.date}"/></label>
-                                <input type="datetime-local" id="endDate" name="endDate"  th:field="*{endDate}" class="form-control form-control-lg"/>
+                                <input type="datetime-local" id="endDate" name="endDate"  th:field="*{endDate}" class="form-control form-control-lg" required/>
                                 <div class="error" th:if="${#fields.hasErrors('endDate')}" th:errors="*{endDate}">Invalid name</div>
                             </div>
 

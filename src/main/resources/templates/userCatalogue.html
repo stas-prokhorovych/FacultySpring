@@ -9,6 +9,10 @@
 <body>
 <div th:replace="fragments/navbar :: navbar"></div>
 
+<div class="card-body p-5 text-center" th:if="${dataError != null}">
+    <div class="data-error" th:text="${dataError}">Data Error</div>
+    <br>
+</div>
 
 <div class="center">
     <h2 class="center" th:text="#{user.catalogue.students}"/>

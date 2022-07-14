@@ -1,5 +1,8 @@
 package com.example.controller;
 
+import com.example.exception.CourseServiceException;
+import com.example.exception.JournalServiceException;
+import com.example.exception.UserServiceException;
 import com.example.model.Course;
 import com.example.model.User;
 import com.example.service.CourseService;
@@ -13,6 +16,7 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import java.time.LocalDateTime;
 import java.util.List;
@@ -56,8 +60,13 @@ public class TeacherController {
      * @return redirect to journal route
      */
     @PostMapping(START_COURSE)
-    public String startCourse(@RequestParam Long courseId) {
-        courseService.startCourse(LocalDateTime.now(), STATUS_IN_PROGRESS, courseId);
+    public String startCourse(@RequestParam Long courseId,  RedirectAttributes redirectAttributes) {
+        try {
+            courseService.startCourse(LocalDateTime.now(), STATUS_IN_PROGRESS, courseId);
+        } catch (CourseServiceException e) {
+            redirectAttributes.addFlashAttribute(ATTR_DATA_ERROR, e.getMessage());
+        }
+
         return "redirect:journal";
     }
 
@@ -69,9 +78,14 @@ public class TeacherController {
      */
     @PostMapping("/end-course")
     public String endCourse(@RequestParam Long courseId,
-                            @RequestParam(value = "studentId") String[] studentIds,
-                            @RequestParam(value = "mark") String[] studentMarks) {
-        journalService.endCourse(courseId, studentIds, studentMarks);
+                            @RequestParam(value = "studentId", required = false) String[] studentIds,
+                            @RequestParam(value = "mark", required = false) String[] studentMarks,
+                            RedirectAttributes redirectAttributes) {
+        try {
+            journalService.endCourse(courseId, studentIds, studentMarks);
+        } catch (JournalServiceException e) {
+            redirectAttributes.addFlashAttribute(ATTR_DATA_ERROR, e.getMessage());
+        }
         return "redirect:journal";
     }
 

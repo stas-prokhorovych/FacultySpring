@@ -15,7 +15,6 @@
     <br>
 </div>
 
-
 <h3 class="center" th:text="#{catalogue.filter}"/>
 <div class="row justify-content-center">
     <form th:action="@{/course-catalogue}">
@@ -46,16 +45,16 @@
                         <select name="teacher" id="teacher">
                             <option value="" selected disabled hidden th:text="#{catalogue.all}"></option>
                             <span th:each="teacher: ${teacherForForm}">
-                                <option th:value="${teacher.id}" th:text="${teacher.firstName + ' ' + teacher.lastName}"/>
+                                <option th:value="${teacher.id}" th:text="${teacher.lastName + ' ' + teacher.firstName}"/>
                             </span>
                         </select>
                     </td>
                     <td>
-                        <input type="radio" id="name" name="sort" value="course.name">
+                        <input type="radio" id="name" name="sortWay" value="name">
                         <label for="name" th:text="#{catalogue.sort.name}"/><br>
-                        <input type="radio" id="start_date" name="sort" value="DATEDIFF(end_date, start_date)">
+                        <input type="radio" id="start_date" name="sortWay" value="DATEDIFF(end_date, start_date)">
                         <label for="start_date" th:text="#{catalogue.sort.duration}"/><br>
-                        <input type="radio" id="student_enrolled" name="sort" value="student_enrolled">
+                        <input type="radio" id="student_enrolled" name="sortWay" value="student_enrolled">
                         <label for="student_enrolled" th:text="#{catalogue.sort.student.enrolled}"/><br>
                     </td>
                     <td>
@@ -114,7 +113,7 @@
                         <td th:text="${#temporals.format(course.endDate, 'dd-MM-yyyy HH:mm')}"/>
                         <td th:text="${course.courseStatus}"/>
 
-                        <th:block th:each="i: ${#numbers.sequence(0, noOfPages)}">
+                        <th:block th:each="i: ${#numbers.sequence(0, size)}">
                             <span th:if="${i == iter.index}">
                                 <span th:each="nOfStudents,iter: ${studentsEnrolled}">
                                     <span th:if="${i == iter.index}">
@@ -129,7 +128,7 @@
                             </span>
                         </th:block>
 
-                        <th:block th:each="i: ${#numbers.sequence(0, noOfPages)}">
+                        <th:block th:each="i: ${#numbers.sequence(0, size)}">
                             <span th:if="${i == iter.index}">
                                 <span sec:authorize="hasAuthority('Student')" class="navbar-nav">
                                     <span th:each="selected,iter: ${courseAlreadySelected}">
@@ -173,21 +172,22 @@
         </table>
 
         <nav aria-label="navigation for courses">
+
             <ul class="pagination">
                 <span th:if="${page !=  1}">
                     <li class="page-item">
                         <a class="page-link"
-                           th:href="@{ ${url} + '?' + page + '=' + ${page - 1} + '&' + size + '=' + ${size} }"
+                           th:href="@{ ${url} + '?' + page + '=' + ${page - 1} + '&' + size + '=' + ${size} + '&' + theme + '=' + ${theme} + '&' + teacher + '=' + ${teacher} + '&' + sortWay + '=' + ${sortWay} + '&' + order + '=' + ${order}}"
                            th:text="#{catalogue.course.page.previous}">
                         </a>
                     </li>
                 </span>
 
                 <th:block th:each="i: ${#numbers.sequence(1, noOfPages)}">
-                    <span th:if="${page ==  i}">
+                    <span th:if="${page ==  i && i != noOfPages}">
                         <li class="page-item">
                             <a class="page-link"
-                               th:href="@{ ${url} + '?' + page + '=' + ${i} + '&' + size + '=' + ${size} }"
+                               th:href="@{ ${url} + '?' + page + '=' + ${i} + '&' + size + '=' + ${size} + '&' + theme + '=' + ${theme} + '&' + teacher + '=' + ${teacher} + '&' + sortWay + '=' + ${sortWay} + '&' + order + '=' + ${order} }"
                                th:text="${i}">
                             </a>
                         </li>
@@ -195,7 +195,7 @@
                     <span th:unless="${page ==  i}">
                         <li class="page-item">
                             <a class="page-link"
-                               th:href="@{ ${url} + '?' + page + '=' + ${i} + '&' + size + '=' + ${size} }"
+                               th:href="@{ ${url} + '?' + page + '=' + ${i} + '&' + size + '=' + ${size} + '&' + theme + '=' + ${theme} + '&' + teacher + '=' + ${teacher} + '&' + sortWay + '=' + ${sortWay} + '&' + order + '=' + ${order} }"
                                th:text="${i}">
                             </a>
                         </li>
@@ -205,12 +205,13 @@
                 <span th:if="${page lt  noOfPages}">
                     <li class="page-item">
                         <a class="page-link"
-                           th:href="@{  ${url} + '?' + page + '=' + ${page + 1} + '&' + size + '=' + ${size}}"
+                           th:href="@{  ${url} + '?' + page + '=' + ${page + 1} + '&' + size + '=' + ${size}  + '&' + theme + '=' + ${theme} + '&' + teacher + '=' + ${teacher} + '&' + sortWay + '=' + ${sortWay} + '&' + order + '=' + ${order} }"
                            th:text="#{catalogue.course.page.next}">
                         </a>
                     </li>
                 </span>
             </ul>
+
         </nav>
     </div>
 </div>
